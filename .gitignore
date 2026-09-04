@@ -1,0 +1,4 @@
+*.o
+myshell
+a.out
+.DS_Store
