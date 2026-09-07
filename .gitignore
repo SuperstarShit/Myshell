@@ -2,3 +2,6 @@
 myshell
 a.out
 .DS_Store
+backup_shell.c
+backup_shell
+rough.c

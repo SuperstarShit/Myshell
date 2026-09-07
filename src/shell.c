@@ -1,9 +1,81 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <stdbool.h>
+
+
+#define MAX_SIZE 100
+
+
+typedef struct 
+{
+    char *stack_com[MAX_SIZE];
+    int top;
+} stack;
+
+void initializer(stack *ptr)
+{
+    ptr->top = -1;
+    return;
+}
+
+bool isempty(stack *ptr)
+{
+    if(ptr->top == -1) return true;
+
+    return false;
+}
+
+bool isfull(stack *ptr)
+{
+    if(ptr->top >= MAX_SIZE-1) return true;
+
+    return false;
+}
+
+void push(stack *ptr , char command[])
+{
+    if(isfull(ptr)) 
+    {
+        printf("Stack Overflow\n");
+        return;
+    }
+    ptr->stack_com[++ptr->top] = command;
+    printf("Successfully pushed: ");
+    printf("%s\n", command);
+
+    return;
+}
+
+void pop(stack *ptr)
+{
+    if(isempty(ptr))
+    {
+        printf("Stack underflow\n");
+        return;
+    }
+    char *tmp = ptr->stack_com[ptr->top];
+    ptr->top--;
+    printf("Successfully poppped: ");
+    printf("%s", tmp);
+
+    free(tmp);
+
+    return;
+}
+
+void peek(stack *ptr)
+{
+    printf("%s", ptr->stack_com[ptr->top]);
+
+    return;
+}
+
+
 
 
 int isChar_space(char value);
@@ -17,6 +89,8 @@ struct commandList
 int main()
 {
 
+    stack history;
+    initializer(&history);
     char *str = malloc(100);
 
     while (1)
@@ -25,24 +99,14 @@ int main()
 
         fgets(str, 100, stdin);
 
-        if (strncmp(str, "fk u", 4) == 0)
-            break;
-
+        if (strncmp(str, "fk u", 4) == 0) break;
+            
         else
         {
+            push(&history, str);
 
-            pid_t worker = fork();
-
-            if (worker < 0)
-            {
-                printf("Child creation failed\n");
-                return 1;
-            }
-
-            if (worker == 0)
-            {
-                // parser
-                char *commands[10];
+// parser is here now
+              char *commands[10];
 
                 char *p = str;
                 int word_count = 0;
@@ -76,6 +140,21 @@ int main()
                         p++;
                 }
                 commands[word_count] = NULL;
+
+
+
+            pid_t worker = fork();
+
+            if (worker < 0)
+            {
+                printf("Child creation failed\n");
+                return 1;
+            }
+
+            if (worker == 0)
+            {
+               
+              
 
               
 /*
