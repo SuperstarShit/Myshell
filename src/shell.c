@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 
+
 #define MAX_SIZE 100
 
 
@@ -44,7 +45,9 @@ void push(stack *ptr , char command[])
         printf("Stack Overflow\n");
         return;
     }
-    ptr->stack_com[++ptr->top] = command;
+    char *val = malloc(strlen(command)+1);
+    strcpy(val, command);
+    ptr->stack_com[++ptr->top] = val;
     printf("Successfully pushed: ");
     printf("%s\n", command);
 
